@@ -27,6 +27,13 @@ export class Layer {
 class PixelMap {
     constructor() {
         this.layers = testData();
+        this.currentLayer = this.layers[0];
+    }
+
+    setPixel(x, y, pixel) {
+        if (this.currentLayer) {
+            this.currentLayer.setPixel(x, y, pixel);
+        }
     }
 
     draw(ctx) {
@@ -85,12 +92,19 @@ class PixelCanvas extends Component {
     componentDidMount() {
         let canvas = document.getElementById('canvas');
         canvas.addEventListener('click', (event) => this.onClickEvent(event), false);
-        let ctx = canvas.getContext('2d');
-        this.draw(ctx);
+        this.ctx = canvas.getContext('2d');
+        this.update();
+    }
+
+    update() {
+        this.draw(this.ctx);
     }
 
     onClickEvent(event) {
-
+        let x = event.offsetX / 10;
+        let y = event.offsetY / 10;
+        this.pixelMap.setPixel(parseInt(x), parseInt(y), 'red');
+        this.update();
     }
 
     /**
